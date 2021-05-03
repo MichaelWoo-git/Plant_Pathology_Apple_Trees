@@ -1,1 +1,0 @@
-# Plant_Pathology_Apple_Trees
