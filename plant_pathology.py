@@ -148,7 +148,7 @@ print(class_names)
 
 # #### Visualization of the images
 
-# In[13]:
+# In[274]:
 
 
 import matplotlib.pyplot as plt
@@ -332,7 +332,7 @@ plt.show()
 
 # ##### Extracting the true labels and predicted labels
 
-# In[225]:
+# In[278]:
 
 
 pred = list()
@@ -360,7 +360,7 @@ for x, y in val_ds:
 
 # ##### We can see that is 3726 which is our validation set
 
-# In[226]:
+# In[279]:
 
 
 print(len(pred),len(true))
@@ -368,7 +368,7 @@ print(len(pred),len(true))
 
 # ##### Lets put the lists into a dataframe
 
-# In[227]:
+# In[280]:
 
 
 df = pd.DataFrame({"Iteration":iteration_num,"true_label":true_name,"pred_label":pred_name,"true_value":true,"pred_value":pred})
@@ -377,7 +377,7 @@ df.head()
 
 # ##### Confusion maxtix for each label
 
-# In[232]:
+# In[281]:
 
 
 from sklearn.metrics import multilabel_confusion_matrix
@@ -385,7 +385,7 @@ mcm = multilabel_confusion_matrix(df["true_label"],df["pred_label"],labels=class
 mcm
 
 
-# In[233]:
+# In[282]:
 
 
 import io
@@ -411,7 +411,7 @@ for met in mcm:
 
 # ##### Dataframe of trues and falses
 
-# In[234]:
+# In[283]:
 
 
 df_stats = pd.DataFrame({"label_name":label_name,"true_neg":true_neg,"false_pos":false_pos,"false_neg":false_neg,"true_pos":true_pos})
@@ -422,7 +422,7 @@ df_stats.head()
 # * It is the closeness of the measurements to a specific value,
 # !["accuracy"](https://wikimedia.org/api/rest_v1/media/math/render/svg/47deb47eb7ac214423d0a6afd05ec0af362fef9b)
 
-# In[235]:
+# In[284]:
 
 
 df_stats['accuracy'] = (df_stats.true_pos+df_stats.true_neg)/(df_stats.true_pos + df_stats.true_neg + df_stats.false_pos + df_stats.false_neg)
@@ -433,7 +433,7 @@ df_stats
 # * It tells you what fraction of predictions as a positive class were actually positive. 
 # !["precision"](https://wikimedia.org/api/rest_v1/media/math/render/svg/d854b1544fc77735d575ce0d30e34d7f1eacf707)
 
-# In[236]:
+# In[285]:
 
 
 df_stats['precision'] = (df_stats['true_pos'])/(df_stats['true_pos']+df_stats['false_pos'])
@@ -445,13 +445,13 @@ df_stats.head()
 # * It tells you what fraction of all positive samples were correctly predicted as positive by the classifier. It is also known as True Positive Rate (TPR), Sensitivity, Probability of Detection.  
 # !['recall'](https://wikimedia.org/api/rest_v1/media/math/render/svg/f02ea353bf60bfdd9557d2c98fe18c34cd8db835)
 
-# In[237]:
+# In[286]:
 
 
 df_stats["tpr"] = df_stats.true_pos/(df_stats.true_pos+df_stats.false_neg)
 
 
-# In[238]:
+# In[287]:
 
 
 df_stats.head()
@@ -461,7 +461,7 @@ df_stats.head()
 # * Measures the proportion of negatives that are correctly identified (i.e. the proportion of those who do not have the condition (unaffected) who are correctly identified as not having the condition).
 # !['specificity'](https://wikimedia.org/api/rest_v1/media/math/render/svg/8f2c867f0641e498ec8a59de63697a3a45d66b07)
 
-# In[239]:
+# In[288]:
 
 
 df_stats['tnr'] = (df_stats.true_neg)/(df_stats.true_neg+df_stats.false_pos)
@@ -473,7 +473,7 @@ df_stats.head()
 # * The first kind of error is the rejection of a true null hypothesis as the result of a test procedure. This kind of error is called a type I error (false positive) and is sometimes called an error of the first kind.
 # !["fnr"](https://wikimedia.org/api/rest_v1/media/math/render/svg/2af486535eb235ed28c3063ed05fd21657b28410)
 
-# In[240]:
+# In[289]:
 
 
 df_stats['fnr'] = df_stats.false_neg/(df_stats.false_neg+df_stats.true_pos)
@@ -485,7 +485,7 @@ df_stats.head()
 # * The second kind of error is the failure to reject a false null hypothesis as the result of a test procedure. This sort of error is called a type II error (false negative) and is also referred to as an error of the second kind.
 # ![fpr](https://wikimedia.org/api/rest_v1/media/math/render/svg/422d06161964ca90602ec8712cd211cb0d80da19)
 
-# In[241]:
+# In[290]:
 
 
 df_stats['fpr'] = df_stats.false_pos/(df_stats.false_pos+df_stats.true_neg)
@@ -496,7 +496,7 @@ df_stats.head()
 # * It combines precision and recall into a single measure. Mathematically it’s the harmonic mean of precision and recall. 
 # ![f1_score](https://miro.medium.com/max/875/1*wUdjcIb9J9Bq6f2GvX1jSA.png)
 
-# In[242]:
+# In[291]:
 
 
 df_stats["f1_score"] = 2 * (df_stats.precision*df_stats.tpr)/(df_stats.precision + df_stats.tpr)
@@ -508,7 +508,7 @@ df_stats.head()
 # * Error rate (ERR) is calculated as the number of all incorrect predictions divided by the total number of the dataset. The best error rate is 0.0, whereas the worst is 1.0.
 # !["error_rate"](https://s0.wp.com/latex.php?latex=%5Cmathrm%7BERR+%3D+%5Cdisplaystyle+%5Cfrac%7BFP+%2B+FN%7D%7BTP+%2B+TN+%2B+FN+%2B+FP%7D+%3D+%5Cfrac%7BFP+%2B+FN%7D%7BP+%2B+N%7D%7D&bg=ffffff&fg=333333&s=0&c=20201002&zoom=2)
 
-# In[243]:
+# In[292]:
 
 
 df_stats["error_rate"] = (df_stats.false_pos + df_stats.false_neg)/(df_stats.true_pos + df_stats.true_neg + df_stats.false_neg + df_stats.false_pos)
@@ -517,22 +517,22 @@ df_stats.head()
 
 # ##### Storing each confusion matrix with respect to their class_name in memory
 
-# In[244]:
+# In[293]:
 
 
 counter = 0
 saved_cmp = list()
 for met in mcm:
     counter+=1
-    cmp = ConfusionMatrixDisplay(met)
-    saved_cmp.append(cmp)
+    cmp_sv = ConfusionMatrixDisplay(met)
+    saved_cmp.append(cmp_sv)
 
 
 # ### Model Evaluation Visualization
 
 # ##### Dataframe with all the True Positive, True Negative, False Positive, and False Negative for every iteration
 
-# In[245]:
+# In[294]:
 
 
 df
@@ -540,7 +540,7 @@ df
 
 # ##### Examining each each iteration's confusion matrix
 
-# In[246]:
+# In[295]:
 
 
 samp = df[df["Iteration"] == 1]
@@ -560,62 +560,16 @@ cmp_samp.plot(ax=ax,xticks_rotation="vertical")
 
 # ##### Final Dataframe with all the statistical classification analysis
 
-# In[247]:
+# In[296]:
 
 
 df_stats
 
 
-# In[ ]:
-
-
-# First aggregate all false positive rates
-all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
-
-# Then interpolate all ROC curves at this points
-mean_tpr = np.zeros_like(all_fpr)
-for i in range(n_classes):
-    mean_tpr += interp(all_fpr, fpr[i], tpr[i])
-
-# Finally average it and compute AUC
-mean_tpr /= n_classes
-
-fpr["macro"] = all_fpr
-tpr["macro"] = mean_tpr
-roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
-
-# Plot all ROC curves
-plt.figure()
-plt.plot(fpr["micro"], tpr["micro"],
-         label='micro-average ROC curve (area = {0:0.2f})'
-               ''.format(roc_auc["micro"]),
-         color='deeppink', linestyle=':', linewidth=4)
-
-plt.plot(fpr["macro"], tpr["macro"],
-         label='macro-average ROC curve (area = {0:0.2f})'
-               ''.format(roc_auc["macro"]),
-         color='navy', linestyle=':', linewidth=4)
-
-colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
-for i, color in zip(range(n_classes), colors):
-    plt.plot(fpr[i], tpr[i], color=color, lw=lw,
-             label='ROC curve of class {0} (area = {1:0.2f})'
-             ''.format(i, roc_auc[i]))
-
-plt.plot([0, 1], [0, 1], 'k--', lw=lw)
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Some extension of Receiver operating characteristic to multi-class')
-plt.legend(loc="lower right")
-plt.show()
-
-
 # ##### Classification Report
 # * We can see that this function from sklearn learn aligns up perfectly with the dataframe above!
 
-# In[248]:
+# In[298]:
 
 
 from sklearn.metrics import classification_report
@@ -624,7 +578,7 @@ print(classification_report(df['true_label'],df['pred_label']))
 
 # ##### Plotting confusion matrix for each class name
 
-# In[249]:
+# In[299]:
 
 
 fig, axs = plt.subplots(4,3)
@@ -663,13 +617,13 @@ plt.tight_layout()
 
 # ##### Overall confusion matrix
 
-# In[250]:
+# In[300]:
 
 
 import numpy as np
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 import matplotlib.pyplot as plt
-
+cm = confusion_matrix(df["true_value"], df["pred_value"])
 cmp = ConfusionMatrixDisplay(cm, display_labels=class_names)
 fig, ax = plt.subplots(figsize=(10,10))
 cmp.plot(ax=ax,xticks_rotation="vertical")
@@ -677,10 +631,11 @@ cmp.plot(ax=ax,xticks_rotation="vertical")
 
 # ##### Model prediction with the test images
 
-# In[272]:
+# In[301]:
 
 
 test_set = os.listdir("data/test_images/")
+
 for leaf in test_set:
 
     img = keras.preprocessing.image.load_img("data/test_images/"+leaf, target_size=(img_height, img_width))
