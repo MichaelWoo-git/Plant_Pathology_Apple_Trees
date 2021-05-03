@@ -14,19 +14,35 @@
 
 import numpy as np
 import pandas as pd
+from sklearn.metrics import classification_report
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import PIL
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
+import matplotlib.pyplot as plt
+import pathlib
+from sklearn.metrics import multilabel_confusion_matrix
+import numpy as np
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
+import matplotlib.pyplot as plt
+
 
 
 # In[222]:
 
 
 train_data = pd.read_csv("data/train.csv")
-train_data.head()
+print(train_data.head())
 
 
 # In[223]:
 
 
-train_data.info()
+print(train_data.info())
 
 
 # ##### Checking to see if there are any null values in the dataset
@@ -64,14 +80,6 @@ train_data.isnull().any()
 # In[5]:
 
 
-import matplotlib.pyplot as plt
-import numpy as np
-import os
-import PIL
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-from tensorflow.keras.models import Sequential
 
 
 # ##### Viewing the data
@@ -151,7 +159,6 @@ print(class_names)
 # In[274]:
 
 
-import matplotlib.pyplot as plt
 
 plt.figure(figsize=(10, 15))
 for images, labels in train_ds.take(1):
@@ -269,7 +276,7 @@ model.summary()
 # In[27]:
 
 
-epochs = 15
+epochs = 3
 history = model.fit(
   train_ds,
   validation_data=val_ds,
@@ -372,7 +379,7 @@ print(len(pred),len(true))
 
 
 df = pd.DataFrame({"Iteration":iteration_num,"true_label":true_name,"pred_label":pred_name,"true_value":true,"pred_value":pred})
-df.head()
+print(df.head())
 
 
 # ##### Confusion maxtix for each label
@@ -380,9 +387,9 @@ df.head()
 # In[281]:
 
 
-from sklearn.metrics import multilabel_confusion_matrix
+
 mcm = multilabel_confusion_matrix(df["true_label"],df["pred_label"],labels=class_names)
-mcm
+print(mcm)
 
 
 # In[282]:
@@ -415,7 +422,7 @@ for met in mcm:
 
 
 df_stats = pd.DataFrame({"label_name":label_name,"true_neg":true_neg,"false_pos":false_pos,"false_neg":false_neg,"true_pos":true_pos})
-df_stats.head()
+print(df_stats.head())
 
 
 # ##### Accuracy 
@@ -426,7 +433,7 @@ df_stats.head()
 
 
 df_stats['accuracy'] = (df_stats.true_pos+df_stats.true_neg)/(df_stats.true_pos + df_stats.true_neg + df_stats.false_pos + df_stats.false_neg)
-df_stats
+print(df_stats)
 
 
 # ##### Precision 
@@ -438,7 +445,7 @@ df_stats
 
 df_stats['precision'] = (df_stats['true_pos'])/(df_stats['true_pos']+df_stats['false_pos'])
 df_stats.fillna(0,inplace=True)
-df_stats.head()
+print(df_stats.head())
 
 
 # ##### Recall 
@@ -454,7 +461,7 @@ df_stats["tpr"] = df_stats.true_pos/(df_stats.true_pos+df_stats.false_neg)
 # In[287]:
 
 
-df_stats.head()
+print(df_stats.head())
 
 
 # ##### Specificity (True Negative rate) 
@@ -465,7 +472,7 @@ df_stats.head()
 
 
 df_stats['tnr'] = (df_stats.true_neg)/(df_stats.true_neg+df_stats.false_pos)
-df_stats.head()
+print(df_stats.head())
 
 
 # ##### Type I error (False Negative Rate)
@@ -477,7 +484,7 @@ df_stats.head()
 
 
 df_stats['fnr'] = df_stats.false_neg/(df_stats.false_neg+df_stats.true_pos)
-df_stats.head()
+print(df_stats.head())
 
 
 # ##### Type II error (False Positive Rate)
@@ -489,7 +496,7 @@ df_stats.head()
 
 
 df_stats['fpr'] = df_stats.false_pos/(df_stats.false_pos+df_stats.true_neg)
-df_stats.head()
+print(df_stats.head())
 
 
 # ##### F1-score
@@ -501,7 +508,7 @@ df_stats.head()
 
 df_stats["f1_score"] = 2 * (df_stats.precision*df_stats.tpr)/(df_stats.precision + df_stats.tpr)
 df_stats.fillna(0,inplace=True)
-df_stats.head()
+print(df_stats.head())
 
 
 # ##### Error rate 
@@ -512,7 +519,7 @@ df_stats.head()
 
 
 df_stats["error_rate"] = (df_stats.false_pos + df_stats.false_neg)/(df_stats.true_pos + df_stats.true_neg + df_stats.false_neg + df_stats.false_pos)
-df_stats.head()
+print(df_stats.head())
 
 
 # ##### Storing each confusion matrix with respect to their class_name in memory
@@ -545,17 +552,17 @@ df
 
 samp = df[df["Iteration"] == 1]
 cm_samp = confusion_matrix(samp["true_value"], samp["pred_value"])
-samp.head()
+print(samp.head())
 labs = list()
 set_amt = list(set(np.array(samp.true_value)).union(set(np.array(samp.pred_value))))
 
 for i in set_amt:
     labs.append(class_names[i])
 
-cm_samp
+print(cm_samp)
 cmp_samp = ConfusionMatrixDisplay(cm_samp, display_labels=labs)
 fig, ax = plt.subplots(figsize=(8,8))
-cmp_samp.plot(ax=ax,xticks_rotation="vertical")
+print(cmp_samp.plot(ax=ax,xticks_rotation="vertical"))
 
 
 # ##### Final Dataframe with all the statistical classification analysis
@@ -563,7 +570,7 @@ cmp_samp.plot(ax=ax,xticks_rotation="vertical")
 # In[296]:
 
 
-df_stats
+print(df_stats)
 
 
 # ##### Classification Report
@@ -572,7 +579,6 @@ df_stats
 # In[298]:
 
 
-from sklearn.metrics import classification_report
 print(classification_report(df['true_label'],df['pred_label']))
 
 
@@ -612,7 +618,7 @@ axs[3,2] = saved_cmp[11].plot(ax = axs[3,2])
 
 
 fig.set_size_inches(12,12)
-plt.tight_layout()  
+print(plt.tight_layout())
 
 
 # ##### Overall confusion matrix
@@ -620,13 +626,11 @@ plt.tight_layout()
 # In[300]:
 
 
-import numpy as np
-from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
-import matplotlib.pyplot as plt
+
 cm = confusion_matrix(df["true_value"], df["pred_value"])
 cmp = ConfusionMatrixDisplay(cm, display_labels=class_names)
 fig, ax = plt.subplots(figsize=(10,10))
-cmp.plot(ax=ax,xticks_rotation="vertical")
+print(cmp.plot(ax=ax,xticks_rotation="vertical"))
 
 
 # ##### Model prediction with the test images
